@@ -21,8 +21,7 @@ class Scene:
                 add(Cube(app, pos=(x, -3, z)))
         
         add(Cat(app, pos=(0, -2, -10)))
-        # add(Wall(app, pos=(10, 2, -10)))
-        walls = Map().get_walls(app)
+        walls = app.map.get_walls(app)
         for wall in walls:
             add(wall)
         

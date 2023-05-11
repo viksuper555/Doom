@@ -1,6 +1,7 @@
 import pygame as pg
 import moderngl as mgl
 import sys
+from map import Map
 from mesh import Mesh
 from model import *
 from camera import Camera
@@ -25,14 +26,14 @@ class GraphicsEngine:
         self.ctx = mgl.create_context()
         self.ctx.enable(flags=mgl.DEPTH_TEST | mgl.CULL_FACE)
         self.clock = pg.time.Clock()
-        self.time = 0
-        self.delta_time = 0
+        self.time = 1
+        self.delta_time = 1
         # Light, camera, scene
         self.light = Light()
         self.camera = Camera(self)
         self.mesh = Mesh(self)
+        self.map = Map(self)
         self.scene = Scene(self)
-
 
     def check_events(self):
         for event in pg.event.get():

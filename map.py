@@ -17,7 +17,8 @@ mini_map = [
 
 
 class Map:
-    def __init__(self):
+    def __init__(self, app):
+        self.app = app
         self.mini_map = mini_map
         self.world_map = {}
         self.rows = len(self.mini_map)
