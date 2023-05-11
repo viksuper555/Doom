@@ -14,6 +14,11 @@ class VAO:
             vbo = self.vbo.vbos['cube']
         )
 
+        self.vaos['wall'] = self.get_vao(
+            program = self.program.programs['default'],
+            vbo = self.vbo.vbos['wall']
+        )
+
         self.vaos['cat'] = self.get_vao(
             program = self.program.programs['default'],
             vbo = self.vbo.vbos['cat']

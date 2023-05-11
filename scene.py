@@ -1,4 +1,5 @@
-from model import Cat, Cube
+from map import Map
+from model import Cat, Cube, Wall
 
 
 class Scene:
@@ -18,9 +19,13 @@ class Scene:
         for x in range(-n, n, s):
             for z in range(-n, n, s):
                 add(Cube(app, pos=(x, -3, z)))
-
+        
         add(Cat(app, pos=(0, -2, -10)))
-
+        # add(Wall(app, pos=(10, 2, -10)))
+        walls = Map().get_walls(app)
+        for wall in walls:
+            add(wall)
+        
     def render(self):
         for obj in self.objects:
             obj.render()
