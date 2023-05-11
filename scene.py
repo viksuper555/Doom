@@ -1,4 +1,4 @@
-from model import Cube
+from model import Cat, Cube
 
 
 class Scene:
@@ -14,9 +14,12 @@ class Scene:
         app = self.app
         add = self.add_object
 
-        add(Cube(app))
-        add(Cube(app, pos=(2.5, 0, 0), rot=(45, 0, 0), scale=(1, 2, 1)))
-        add(Cube(app, pos=(-2.5, 0, 0), rot=(0, 45, 0), scale=(1, 1, 2)))
+        n, s = 80, 2
+        for x in range(-n, n, s):
+            for z in range(-n, n, s):
+                add(Cube(app, pos=(x, -3, z)))
+
+        add(Cat(app, pos=(0, -2, -10)))
 
     def render(self):
         for obj in self.objects:

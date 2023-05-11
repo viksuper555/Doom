@@ -1,9 +1,11 @@
 import numpy as np
+import pywavefront
 
 class VBO:
     def __init__(self, ctx) -> None:
         self.vbos = {}
         self.vbos['cube'] = CubeVBO(ctx)
+        self.vbos['cat'] = CatVBO(ctx)
 
     def destroy(self):
         [vbo.destroy() for vbo in self.vbos.values()]
@@ -15,10 +17,10 @@ class BaseVBO:
         self.format: str = None
         self.attribs: list = None
     
-    def get_vertext_data(self): ...
+    def get_vertex_data(self): ...
 
     def get_vbo(self):
-        vertex_data = self.get_vertext_data()
+        vertex_data = self.get_vertex_data()
         vbo = self.ctx.buffer(vertex_data)
         return vbo
     
@@ -36,7 +38,7 @@ class CubeVBO(BaseVBO):
         data = [vertices[ind] for triangle in indices for ind in triangle]
         return np.array(data, dtype='f4')
 
-    def get_vertext_data(self):
+    def get_vertex_data(self):
         vertices = [(-1, -1, 1), (1, -1, 1), (1, 1, 1), (-1, 1, 1), 
                     (-1, 1, -1), (-1, -1, -1), (1, -1, -1), (1, 1, -1)]
         
@@ -68,3 +70,15 @@ class CubeVBO(BaseVBO):
         vertex_data = np.hstack([tex_coord_data, vertex_data])
         return vertex_data
     
+class CatVBO(BaseVBO):
+    def __init__(self, ctx) -> None:
+        super().__init__(ctx)
+        self.format = '2f 3f 3f'
+        self.attribs = ['in_texcoord_0', 'in_normal', 'in_position']
+    
+    def get_vertex_data(self):
+        objs = pywavefront.Wavefront('objects/cat/20430_Cat_v1_NEW.obj', create_materials=True, cache=True, parse=True)
+        obj = objs.materials.popitem()[1]
+        vertex_data = obj.vertices
+        vertex_data = np.array(vertex_data, dtype='f4')
+        return vertex_data
