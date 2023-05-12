@@ -19,9 +19,9 @@ class VAO:
             vbo = self.vbo.vbos['wall']
         )
 
-        self.vaos['cat'] = self.get_vao(
+        self.vaos['monkey'] = self.get_vao(
             program = self.program.programs['default'],
-            vbo = self.vbo.vbos['cat']
+            vbo = self.vbo.vbos['monkey']
         )
     
     def get_vao(self, program, vbo):

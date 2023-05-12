@@ -90,8 +90,8 @@ class Wall(BaseModel):
         self.program['light.Is'].write(self.app.light.Is)
 
 
-class Cat(BaseModel):
-    def __init__(self, app, vao_name='cat', tex_id='cat', pos=(0, 0, 0), rot=(-90, 0, 0), scale=(0.3, 0.3, 0.3)) -> None:
+class Monkey(BaseModel):
+    def __init__(self, app, vao_name='monkey', tex_id='monkey', pos=(0, 0, 0), rot=(-90, 0, 0), scale=(0.05, 0.05, 0.05)) -> None:
         super().__init__(app, vao_name, tex_id, pos, rot, scale)
         self.on_init()
 

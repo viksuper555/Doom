@@ -8,7 +8,7 @@ class Texture:
         self.textures[0] = self.get_texture(path='textures/container.jpg')
         for i in range(1,6):
             self.textures[i] = self.get_texture(path=f'textures/{i}.png')
-        self.textures['cat'] = self.get_texture(path='objects/cat/20430_cat_diff_v1.jpg')
+        self.textures['monkey'] = self.get_texture(path='objects/monkey/monkey.jpg')
 
     def get_texture(self, path):
         texture = pg.image.load(path).convert()

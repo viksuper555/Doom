@@ -1,5 +1,5 @@
 from map import Map
-from model import Cat, Cube, Wall
+from model import Monkey, Cube, Wall
 
 
 class Scene:
@@ -18,9 +18,9 @@ class Scene:
         n, s = 80, 2
         for x in range(-n, n, s):
             for z in range(-n, n, s):
-                add(Cube(app, pos=(x, -3, z)))
+                add(Cube(app, pos=(x, -3, z -30)))
         
-        add(Cat(app, pos=(0, -2, -10)))
+        add(Monkey(app, pos=(20, -2, -25)))
         walls = app.map.get_walls(app)
         for wall in walls:
             add(wall)

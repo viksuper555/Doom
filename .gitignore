@@ -1,2 +1,4 @@
 /.vscode
 /__pycache__
+objects/**/*.obj.bin
+objects/**/*.obj.json

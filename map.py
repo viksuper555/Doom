@@ -15,6 +15,11 @@ mini_map = [
     [3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3],
 ]
 
+# mini_map = [
+#     [1, 1, 1],
+#     [1, _, 1],
+#     [3, 3, 3],
+# ]
 
 class Map:
     def __init__(self, app):
@@ -32,4 +37,4 @@ class Map:
                     self.world_map[(i, j)] = value
 
     def get_walls(self, app):
-        return [Wall(app, pos=(6 * pos[0][1] - 20, 1, -6 * pos[0][0] + 10), tex_id=pos[1]) for pos in self.world_map.items()]
+        return [Wall(app, pos=(6 * pos[0][1], 1, -6 * pos[0][0]), tex_id=pos[1]) for pos in self.world_map.items()]
