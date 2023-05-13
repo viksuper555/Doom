@@ -7,7 +7,7 @@ from settings import FAR, FOV, MOUSE_SENSITIVITY, NEAR, PLAYER_POS, PLAYER_SIZE_
 
 
 class Camera:
-    def __init__(self, app, position=(0, 1, 4), yaw=-90, pitch=0) -> None:
+    def __init__(self, app, position=(20, 1, -6), yaw=-90, pitch=0) -> None:
         self.app = app
         self.aspect_ratio = app.WIN_SIZE[0] / app.WIN_SIZE[1]
         self.position = glm.vec3(position)
@@ -46,13 +46,22 @@ class Camera:
         velocity = PLAYER_SPEED * self.app.delta_time
         keys = pg.key.get_pressed()
         if keys[pg.K_w]:
-            self.position += self.forward * velocity
+            move = glm.floor((self.position + self.forward * velocity) / 6)
+            print(f"{-move.z, move.x}, {self.check_wall(-move[2], move[0])}")
+            if self.check_wall(-move[2], move[0]):
+                self.position += self.forward * velocity
         if keys[pg.K_a]:
-            self.position -= self.right * velocity
+            print(f"{self.position} {self.right}")
+            if self.can_move(self.right * -1):
+                self.position -= self.right * velocity
         if keys[pg.K_s]:
-            self.position -= self.forward * velocity
+            print(f"{self.position} {self.forward}")
+            if self.can_move(self.forward * -1):
+                self.position -= self.forward * velocity
         if keys[pg.K_d]:
-            self.position += self.right * velocity
+            print(f"{self.position} {self.right}")
+            if self.can_move(self.right):
+                self.position += self.right * velocity
 
         # if keys[pg.K_SPACE]:
         #     self.position += self.up * velocity
@@ -62,14 +71,16 @@ class Camera:
     def check_wall(self, x, y):
         return (x, y) not in self.app.map.world_map
     
-    def try_move(self, dx, dy):
+    def can_move(self, dpos):
+        dx = dpos[2]
+        dy = dpos[0]
         scale = PLAYER_SIZE_SCALE / self.app.delta_time
-        if self.check_wall(int(self.x + dx * scale), int(self.y)):
+        if self.check_wall(-int(self.x + dx * scale), int(self.y)):
             self.x += dx
-            self.position.x += dx
-        if self.check_wall(int(self.x), int(self.y + dy * scale)):
+            self.position.x += dy
+        if self.check_wall(-int(self.x), int(self.y + dy * scale)):
             self.y += dy
-            self.position.z += dy
+            self.position.z += dx
             
     
     def get_view_matrix(self):
