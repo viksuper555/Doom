@@ -1,6 +1,6 @@
 import pygame as pg
 
-from model import Wall
+from model import Cube, Wall
 
 _ = False
 mini_map = [
@@ -61,3 +61,10 @@ class Map:
 
     def get_walls(self, app):
         return [Wall(app, pos=(6 * pos[0][1], 1, -6 * pos[0][0]), tex_id=pos[1]) for pos in self.world_map.items()]
+    
+    def get_floor(self, app):
+        cubes = []
+        for j, row in enumerate(self.mini_map):
+            for i, _ in enumerate(row):
+                cubes.append(Cube(app, pos=(j*6, -5, -i*6)))
+        return cubes

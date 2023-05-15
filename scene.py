@@ -1,5 +1,5 @@
 from map import Map
-from model import Monkey, Cube, SkyBox, Wall
+from model import Cube, Monkey, SkyBox
 
 
 class Scene:
@@ -16,16 +16,15 @@ class Scene:
         app = self.app
         add = self.add_object
 
-        # n, s = 80, 2
-        # for x in range(-n, n, s):
-        #     for z in range(-n, n, s):
-        #         add(Cube(app, pos=(x, -3, z -30)))
+        tiles = app.map.get_floor(app)
+        for tile in tiles:
+            add(tile)        
         
         add(Monkey(app, pos=(20, -2, -25)))
         walls = app.map.get_walls(app)
         for wall in walls:
             add(wall)
-        
+
     def render(self):
         for obj in self.objects:
             obj.render()
