@@ -1,13 +1,15 @@
 import pygame as pg
 
-from model import Cube, Wall
+from model import Cube, Monkey, Wall
+WALL_IDs = [1,2,3,4,5]
+NPC_IDs = [6]
 
 _ = False
 mini_map = [
     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
     [1, _, _, _, _, _, _, _, _, _, _, _, _, _, _, 1],
     [1, _, _, 3, 3, 3, 3, _, _, _, 2, 2, 2, _, _, 1],
-    [1, _, _, _, _, _, 4, _, _, _, _, _, 2, _, _, 1],
+    [1, _, _, _, 6, _, 4, _, _, _, _, _, 2, _, _, 1],
     [1, _, _, _, _, _, 4, _, _, _, _, _, 2, _, _, 1],
     [1, _, _, 3, 3, 3, 3, _, _, _, _, _, _, _, _, 1],
     [1, _, _, _, _, _, _, _, _, _, _, _, _, _, _, 1],
@@ -60,7 +62,7 @@ class Map:
                     self.world_map[(i, j)] = value
 
     def get_walls(self, app):
-        return [Wall(app, pos=(6 * pos[0][1], 1, -6 * pos[0][0]), tex_id=pos[1]) for pos in self.world_map.items()]
+        return [Wall(app, pos=(6 * pos[0][1], 1, -6 * pos[0][0]), tex_id=pos[1]) for pos in self.world_map.items() if pos[1] in WALL_IDs]
     
     def get_floor(self, app):
         cubes = []
@@ -68,3 +70,6 @@ class Map:
             for i, _ in enumerate(row):
                 cubes.append(Cube(app, pos=(j*6, -5, -i*6)))
         return cubes
+    
+    def get_npcs(self, app):
+        return [Monkey(app, pos=(6 * pos[0][1], -2, -6 * pos[0][0])) for pos in self.world_map.items() if pos[1] in NPC_IDs]

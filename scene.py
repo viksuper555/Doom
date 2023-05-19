@@ -20,7 +20,9 @@ class Scene:
         for tile in tiles:
             add(tile)        
         
-        add(Monkey(app, pos=(20, -2, -25)))
+        npcs = app.map.get_npcs(app)
+        for npc in npcs:
+            add(npc)
         walls = app.map.get_walls(app)
         for wall in walls:
             add(wall)
