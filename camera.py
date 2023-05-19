@@ -1,6 +1,7 @@
 import math
 import glm
 import pygame as pg
+from map import WALL_IDs
 
 from settings import FAR, FOV, MOUSE_SENSITIVITY, NEAR, PLAYER_POS, PLAYER_SIZE_SCALE, PLAYER_SPEED
 
@@ -45,44 +46,52 @@ class Camera:
     def move(self):
         velocity = PLAYER_SPEED * self.app.delta_time
         keys = pg.key.get_pressed()
+        vector = glm.vec3(0, 0, 0)
         if keys[pg.K_w]:
-            move = glm.floor((self.position + self.forward * velocity) / 6)
-            print(f"{-move.z, move.x}, {self.check_wall(-move[2], move[0])}")
-            if self.check_wall(-move[2], move[0]):
-                self.position += self.forward * velocity
+            vector = self.forward
         if keys[pg.K_a]:
-            print(f"{self.position} {self.right}")
-            if self.can_move(self.right * -1):
-                self.position -= self.right * velocity
+            vector = -self.right
         if keys[pg.K_s]:
-            print(f"{self.position} {self.forward}")
-            if self.can_move(self.forward * -1):
-                self.position -= self.forward * velocity
+            vector = -self.forward
         if keys[pg.K_d]:
-            print(f"{self.position} {self.right}")
-            if self.can_move(self.right):
-                self.position += self.right * velocity
+            vector = self.right
+        if vector != glm.vec3(0, 0, 0):
+            move = glm.floor((self.position + vector * velocity) / 6)
+            if self.check_wall(-move[2], move[0]):
+                self.position += vector * velocity
 
-        # if keys[pg.K_SPACE]:
-        #     self.position += self.up * velocity
-        # if keys[pg.K_LSHIFT]:
-        #     self.position -= self.up * velocity
 
     def check_wall(self, x, y):
         return (x, y) not in self.app.map.world_map
     
     def can_move(self, dpos):
-        dx = dpos[2]
-        dy = dpos[0]
-        scale = PLAYER_SIZE_SCALE / self.app.delta_time
-        if self.check_wall(-int(self.x + dx * scale), int(self.y)):
-            self.x += dx
-            self.position.x += dy
-        if self.check_wall(-int(self.x), int(self.y + dy * scale)):
-            self.y += dy
-            self.position.z += dx
-            
+        velocity = PLAYER_SPEED * self.app.delta_time
+        keys = pg.key.get_pressed()
+        if keys[pg.K_w]:
+            self.try_move(self.forward * velocity)
+            # self.position += self.forward * velocity
+        if keys[pg.K_a]:
+            self.try_move(-self.right * velocity)
+            # self.position -= self.right * velocity
+        if keys[pg.K_s]:
+            self.try_move(-self.forward * velocity)
+            # self.position -= self.forward * velocity
+        if keys[pg.K_d]:
+            self.try_move(self.right * velocity)
+            # self.position += self.right * velocity
     
+    def try_move(self, vec: glm.vec3):
+        scale = PLAYER_SIZE_SCALE / self.app.delta_time
+        move = (self.position + vec * scale) / 6
+        if move.x < 0 or -move.z < 0 or move.x >= len(self.app.map.mini_map[0]) or move.z >= len(self.app.map.mini_map):
+            return  
+        if not self.is_wall(int(move.x), int(-move.z)):
+            self.position += vec
+            print("Can move")
+    
+    def is_wall(self, x, y):
+        return self.app.map.mini_map[x][y] in WALL_IDs
+
     def get_view_matrix(self):
         return glm.lookAt(self.position, self.position + self.forward, self.up)
 
