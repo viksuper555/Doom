@@ -91,3 +91,44 @@ class Wall(ExtendedBaseModel):
 class Monkey(ExtendedBaseModel):
     def __init__(self, app, vao_name='monkey', tex_id='monkey', pos=(0, 0, 0), rot=(-90, 0, 0), scale=(0.05, 0.05, 0.05)) -> None:
         super().__init__(app, vao_name, tex_id, pos, rot, scale)
+
+    def update(self):
+        self.m_model = self.get_model_matrix()
+        super().update()
+
+    def update_npc_orientation(self, camera):
+        npc_pos = self.pos  # Assuming `get_position()` returns a vec3 object
+        player_pos = camera.position
+
+        direction_vector = player_pos - npc_pos
+        direction_vector = glm.vec3(direction_vector.x, 0.0, -direction_vector.z)  # Ignore the vertical component (y-axis) for 2D rotation
+
+        if np.linalg.norm(direction_vector) < 0.01:
+            return 0.0
+        
+        # Normalize the direction vector
+        direction_vector /= np.linalg.norm(direction_vector)
+
+        # Calculate the angle between the direction vector and the NPC's forward vector
+        forward_vector = glm.vec3(0, 0, -1)
+        dot_product = np.dot(direction_vector, forward_vector)
+        angle = np.arccos(dot_product)
+
+        # Determine the sign of the angle based on the direction vector
+        if direction_vector[0] > 0:
+            angle = -angle
+
+        return angle
+    
+    def get_model_matrix(self):
+        m_model = glm.mat4()
+        # translate
+        m_model = glm.translate(m_model, self.pos)
+        # rotate
+        angle = self.update_npc_orientation(self.app.camera)
+        m_model = glm.rotate(m_model, glm.radians(-90), glm.vec3(1, 0, 0))
+        if angle != 0.0:
+            m_model = glm.rotate(m_model, angle, glm.vec3(0, 0, -1))
+        # scale
+        m_model = glm.scale(m_model, self.scale)
+        return m_model
