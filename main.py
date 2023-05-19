@@ -7,12 +7,12 @@ from model import *
 from camera import Camera
 from light import Light
 from scene import Scene
+from settings import FPS
 
 class GraphicsEngine:
     def __init__(self, win_size=(1600, 900)) -> None:
         pg.init()
         self.WIN_SIZE = win_size
-
         # Init OpenGL attributes
         pg.display.gl_set_attribute(pg.GL_CONTEXT_MAJOR_VERSION, 3)
         pg.display.gl_set_attribute(pg.GL_CONTEXT_MINOR_VERSION, 3)
@@ -35,6 +35,18 @@ class GraphicsEngine:
         self.map = Map(self)
         self.scene = Scene(self)
 
+    def update(self):
+        self.camera.update()
+        pg.display.flip()
+        self.clock.tick(FPS)
+        pg.display.set_caption(f'{self.clock.get_fps() :.1f}')
+        self.delta_time = self.clock.tick(FPS)
+
+    def draw(self):
+        self.screen.fill('black')
+        self.map.draw()
+        self.camera.draw()
+
     def check_events(self):
         for event in pg.event.get():
             if event.type == pg.QUIT or (event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE):
@@ -51,9 +63,11 @@ class GraphicsEngine:
     
     def run(self):
         while True:
+            self.update()
+            # self.draw()
+
             self.get_time()
             self.check_events()
-            self.camera.update()
             self.render()
             self.delta_time = self.clock.tick(60)
 

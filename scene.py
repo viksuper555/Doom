@@ -1,5 +1,5 @@
 from map import Map
-from model import Monkey, Cube, SkyBox, Wall
+from model import Monkey, SkyBox
 
 
 class Scene:

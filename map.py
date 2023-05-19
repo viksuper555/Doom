@@ -2,6 +2,8 @@ import pygame as pg
 
 from model import Wall
 
+WALL_IDs = [1,2,3,4,5]
+
 _ = False
 mini_map = [
     [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
@@ -37,7 +39,6 @@ mini_map = [
     [3, _, _, _, _, _, _, _, _, _, _, _, _, _, _, 3],
     [3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3],
 ]
-
 # mini_map = [
 #     [1, 1, 1],
 #     [1, _, 1],
@@ -49,8 +50,6 @@ class Map:
         self.app = app
         self.mini_map = mini_map
         self.world_map = {}
-        self.rows = len(self.mini_map)
-        self.cols = len(self.mini_map[0])
         self.get_map()
 
     def get_map(self):
@@ -60,4 +59,8 @@ class Map:
                     self.world_map[(i, j)] = value
 
     def get_walls(self, app):
-        return [Wall(app, pos=(6 * pos[0][1], 1, -6 * pos[0][0]), tex_id=pos[1]) for pos in self.world_map.items()]
+        return [Wall(app, pos=(6 * pos[0][1]-6, 1, -6 * pos[0][0]+30), tex_id=pos[1]) for pos in self.world_map.items()]
+    
+    def draw(self):
+        [pg.draw.rect(self.app.screen, 'darkgray', (pos[0] * 100, pos[1] * 100, 100, 100), 2)
+         for pos in self.world_map]
